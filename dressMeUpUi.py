@@ -67,10 +67,7 @@ class DressMeUPDialog(QtWidgets.QDialog):
 		
 
 		self.charLayout = QtWidgets.QVBoxLayout(self.charFrame)
-		#self.charLabel = QtWidgets.QLabel("Character Area")
-		#self.charLabel.setAlignment(QtCore.Qt.AlignCenter)
-		#self.charLayout.addWidget(self.charLabel)
-
+		
 		self.contentLayout.addWidget(self.charFrame)
 
 		# คอลัมน์ขวา (Panel)
@@ -86,9 +83,7 @@ class DressMeUPDialog(QtWidgets.QDialog):
 		)
 
 		self.panelLayout = QtWidgets.QVBoxLayout(self.panelFrame)
-		#self.panelLabel = QtWidgets.QLabel("Panel")
-		#self.panelLabel.setAlignment(QtCore.Qt.AlignCenter)
-		#self.panelLayout.addWidget(self.panelLabel)
+		
 
 		self.contentLayout.addWidget(self.panelFrame)
 
