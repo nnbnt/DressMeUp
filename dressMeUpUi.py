@@ -51,7 +51,7 @@ class DressMeUPDialog(QtWidgets.QDialog):
 		self.contentLayout = QtWidgets.QHBoxLayout()
 		self.mainLayout.addLayout(self.contentLayout)
 
-# ✅ คอลัมน์ซ้าย (Character Area)
+		# คอลัมน์ซ้าย (Character Area)
 		self.charFrame = QtWidgets.QFrame()
 		self.charFrame.setStyleSheet(
 
@@ -73,7 +73,7 @@ class DressMeUPDialog(QtWidgets.QDialog):
 
 		self.contentLayout.addWidget(self.charFrame)
 
-		# ✅ คอลัมน์ขวา (Panel)
+		# คอลัมน์ขวา (Panel)
 		self.panelFrame = QtWidgets.QFrame()
 		self.panelFrame.setStyleSheet("""
 				QFrame {
