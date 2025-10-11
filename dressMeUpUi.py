@@ -6,7 +6,7 @@ except:
 	from shiboken2 import wrapInstance
 import maya.OpenMayaUI as omui 
 
-
+ROOT_RESOURCE_DIR = 'C:/Users/Nennebi/Documents/MAYA/PROJECTS/2024/scripts/dressMeUp/resources'
 class DressMeUPDialog(QtWidgets.QDialog):
 	def __init__(self, parent=None):
 		super().__init__(parent)
@@ -47,51 +47,80 @@ class DressMeUPDialog(QtWidgets.QDialog):
 
 
 		self.nameLayout.addWidget(self.nameLabel)
-		
+	
 		self.contentLayout = QtWidgets.QHBoxLayout()
 		self.mainLayout.addLayout(self.contentLayout)
 
-		# คอลัมน์ซ้าย (Character Area)
-		self.charFrame = QtWidgets.QFrame()
-		self.charFrame.setStyleSheet(
+		
 
+		self.scene = QtWidgets.QGraphicsScene()
+		self.view = QtWidgets.QGraphicsView(self.scene)
+
+		self.mainLayout.addWidget(self.view)
+
+		bg = QtWidgets.QGraphicsPixmapItem(QtGui.QPixmap(f"image/room_test.png"))
+		bg.setZValue(0)
+		self.scene.addItem(bg)
+		self.view.setStyleSheet(
 			'''
-				QFrame {
-					background-color: #FFFDf6;
+				QLabel {
+					
 					min-width: 300px;
 					min-height: 400px;
+					
+					
+					
 				}
-		
+
+
 			'''
+
 		)
+
 		
 
-		self.charLayout = QtWidgets.QVBoxLayout(self.charFrame)
+		# ++++++++++ ภาพตัวละคร +++++++++++
 		
-		self.contentLayout.addWidget(self.charFrame)
+		self.imageLabel = QtWidgets.QLabel()
+		self.imagePixmap = QtGui.QPixmap(f"{ROOT_RESOURCE_DIR}/image/model_test.png")
+		scaled_pixmap = self.imagePixmap.scaled(
+			
+			QtCore.Qt.KeepAspectRatio,
+			QtCore.Qt.SmoothTransformation
+
+			)
+
+
+		self.imageLabel.setPixmap(scaled_pixmap)
+		self.imageLabel.setAlignment(QtCore.Qt.AlignCenter)
+
+		self.imageLabel.setPixmap(self.imagePixmap)
+
+
+		# ++++++++++ คำสั่งเอาภาพเข้ามาวาง +++++++++++
+
+
+		
+		self.charLayout = QtWidgets.QVBoxLayout(self.view)
+		self.contentLayout.addWidget(self.view)
+
+		
+		self.charLayout.addWidget(self.imageLabel)
+
+
+
+
+
+
+
 
 		# คอลัมน์ขวา (Panel)
-		self.panelFrame = QtWidgets.QFrame()
-		self.panelFrame.setStyleSheet("""
-				QFrame {
-					background-color: #FFEFF2;
-					min-width: 300px;
-					min-height: 400px;
-			}
-			"""
-
-		)
-
-		self.panelLayout = QtWidgets.QVBoxLayout(self.panelFrame)
-		
-
-		self.contentLayout.addWidget(self.panelFrame)
-
+	
 
 
 		self.buttonLayout = QtWidgets.QHBoxLayout()
 		self.mainLayout.addLayout(self.buttonLayout)
-		self.createButton = QtWidgets.QPushButton('Create')
+		self.createButton = QtWidgets.QPushButton('Reset')
 		self.createButton.setStyleSheet(
 			'''
 				QPushButton {
@@ -117,7 +146,7 @@ class DressMeUPDialog(QtWidgets.QDialog):
 			'''
 
 		)
-		self.cancelButton = QtWidgets.QPushButton('Cancel')
+		self.cancelButton = QtWidgets.QPushButton('')
 		self.cancelButton.setStyleSheet(
 			'''
 				QPushButton {
