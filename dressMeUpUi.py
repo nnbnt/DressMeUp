@@ -4,7 +4,10 @@ try:
 except:
 	from PySide2 import QtCore, QtGui, QtWidgets
 	from shiboken2 import wrapInstance
-import maya.OpenMayaUI as omui 
+import maya.OpenMayaUI as omui
+
+from . import dressMeUpUtil as dutil
+
 
 ROOT_RESOURCE_DIR = 'C:/Users/Nennebi/Documents/MAYA/PROJECTS/2024/scripts/dressMeUp/resources/'
 class DressMeUPDialog(QtWidgets.QDialog):
@@ -29,15 +32,16 @@ class DressMeUPDialog(QtWidgets.QDialog):
 			'''
 				QLabel {
 					background-color: #9FE3E2;
-					min-width: 5px;
-					min-height: 40px;
+					min-width: 380px;
+					min-height: 50px;
 					color: white;
 					border-radius: 10px;
 					font-size: 16px;
 					font-family: Papyrus;
 					font-weight: bold;
 					text-align: center;
-					
+					padding: 5px;
+					margin: 5px
 				}
 
 
@@ -82,97 +86,91 @@ class DressMeUPDialog(QtWidgets.QDialog):
 			QFrame {
 				background-color: #FFEFF2;
 				border-radius: 10px;
-				min-width: 300px;
+				min-width: 380px;
+				min-height: 5px;
 			}
 		""")
 
 		self.rightLayout = QtWidgets.QVBoxLayout(self.rightFrame)
 		self.contentLayout.addWidget(self.rightFrame)
 
-		# # เพิ่ม Label ฝั่งขวา
-		# self.infoLabel = QtWidgets.QLabel("✨ Dress Info ✨")
-		# self.infoLabel.setAlignment(QtCore.Qt.AlignCenter)
-		# self.infoLabel.setStyleSheet("""
-		# 	QLabel {
-		# 		background-color: #FCD4E4;
-		# 		color: #86445A;
-		# 		border-radius: 8px;
-		# 		font-size: 16px;
-		# 		font-family: Papyrus;
-		# 		font-weight: bold;
-		# 		padding: 6px;
-		# 	}
-		# """)
-		# self.rightLayout.addWidget(self.infoLabel)
+		# Label ฝั่งขวา
+		self.infoLabel = QtWidgets.QLabel("✨ Dress Option ✨")
+		self.infoLabel.setAlignment(QtCore.Qt.AlignCenter)
+		self.infoLabel.setStyleSheet("""
+			QLabel {
+				background-color: #FCD4E4;
+				color: #86445A;
+				border-radius: 2px;
+				font-size: 16px;
+				font-family: Papyrus;
+				font-weight: bold;
+				padding: 2px;
+			}
+		""")
+		self.rightLayout.addWidget(self.infoLabel)
 				
 
 
-		# # ===== เพิ่มปุ่มฝั่งขวา (แต่งตัว) =====
-		# self.scrollArea = QtWidgets.QScrollArea()
-		# self.scrollArea.setWidgetResizable(True)
-		# self.scrollArea.setStyleSheet("""
-		# 	QScrollArea {
-		# 		background-color: transparent;
-		# 		border: none;
-		# 	}
-		# """)
+		# ===== เพิ่มปุ่ม option =====
+		self.scrollArea = QtWidgets.QScrollArea()
+		self.scrollArea.setWidgetResizable(True)
+		self.scrollArea.setStyleSheet("""
+			QScrollArea {
+				background-color: transparent;
+				border-radius: 2px;
+		""")
 
-		# self.scrollContent = QtWidgets.QWidget()
-		# self.scrollLayout = QtWidgets.QVBoxLayout(self.scrollContent)
+		self.scrollContent = QtWidgets.QWidget()
+		self.scrollLayout = QtWidgets.QVBoxLayout(self.scrollContent)
 
-		# # สร้างหมวดหมู่ตัวอย่าง
+		
 
-		# categories = {
-		# 	"หมวก": ["หมวกสีแดง", "หมวกแฟนซี", "หมวกหมี"],
-		# 	"เสื้อ": ["เสื้อยืด", "เสื้อเชิ้ต", "เสื้อคลุม"],
-		# 	"กางเกง": ["กางเกงยีนส์", "กระโปรง", "กางเกงสั้น"]
-		# }
+		for add , items in dutil.CATEGORIES.items():
+			
+			catLabel = QtWidgets.QLabel(f" {add}")
+			catLabel.setStyleSheet("""
+				QLabel {
+					font-weight: bold;
+					font-size: 16px;
+					color: #86445A;
+					margin-top: 2px;
+				}
+			""")
+			self.scrollLayout.addWidget(catLabel)
 
-		# for cat, items in categories.items():
-		# 	# Label หมวดหมู่
-		# 	catLabel = QtWidgets.QLabel(f"🌸 {cat}")
-		# 	catLabel.setStyleSheet("""
-		# 		QLabel {
-		# 			font-weight: bold;
-		# 			font-size: 15px;
-		# 			color: #86445A;
-		# 			margin-top: 10px;
-		# 		}
-		# 	""")
-		# 	self.scrollLayout.addWidget(catLabel)
-
-		# 	# ปุ่มในหมวดนั้น
-		# 	for item in items:
-		# 		btn = QtWidgets.QPushButton(item)
-		# 		btn.setStyleSheet("""
-		# 			QPushButton {
-		# 				background-color: #FDE4EB;
-		# 				border-radius: 8px;
-		# 				padding: 6px;
-		# 				font-family: Papyrus;
-		# 				color: #6A4050;
-		# 			}
-		# 			QPushButton:hover {
-		# 				background-color: #FACFE2;
-		# 			}
-		# 			QPushButton:pressed {
-		# 				background-color: #F8BBD0;
-		# 			}
-		# 		""")
-		# 		# ทดลองให้ปุ่มตอบสนองตอนกด
-		# 		btn.clicked.connect(lambda checked, name=item: print(f"เลือก: {name}"))
-		# 		self.scrollLayout.addWidget(btn)
+			
+			for item in items:
+				btn = QtWidgets.QPushButton(item)
+				btn.setStyleSheet("""
+					QPushButton {
+						background-color: #FDE4EB;
+						border-radius: 2px;
+						padding: 4px;
+						font-weight: bold;
+						color: #6A4050;
+					}
+					QPushButton:hover {
+						background-color: #FACFE2;
+					}
+					QPushButton:pressed {
+						background-color: #F8BBD0;
+					}
+				""")
+				
+				btn.clicked.connect(lambda checked, name=item: print(f"เลือก: {name}"))
+				self.scrollLayout.addWidget(btn)
 
 
 
 
 
 
-		# self.scrollLayout.addStretch()
-		# self.scrollContent.setLayout(self.scrollLayout)
-		# self.scrollArea.setWidget(self.scrollContent)
+		self.scrollLayout.addStretch()
+		self.scrollContent.setLayout(self.scrollLayout)
+		self.scrollArea.setWidget(self.scrollContent)
 
-		# self.rightLayout.addWidget(self.scrollArea)
+		self.rightLayout.addWidget(self.scrollArea)
 
 
 
@@ -186,8 +184,8 @@ class DressMeUPDialog(QtWidgets.QDialog):
 		self.createButton.setStyleSheet(
 			'''
 				QPushButton {
-					background-color: #FFCBCA;
-					color: white;
+					background-color: #FFF9DD;
+					color: #FFF9DD;
 					border-radius: 10px;
 					font-size: 16px;
 					padding: 4px;
@@ -196,12 +194,12 @@ class DressMeUPDialog(QtWidgets.QDialog):
 				}
 
 				QPushButton:hover {
-					background-color: #F2A2AD;
+					background-color: #FFF9DD;
 
 				}
 
 				QPushButton:pressed {
-					background-color: #F2668B;
+					background-color: #FFF9DD;
 				}
 
 
@@ -210,7 +208,7 @@ class DressMeUPDialog(QtWidgets.QDialog):
 		)
 
 
-		self.cancelButton = QtWidgets.QPushButton('')
+		self.cancelButton = QtWidgets.QPushButton('RESET')
 		self.cancelButton.setStyleSheet(
 			'''
 				QPushButton {
