@@ -73,6 +73,8 @@ class DressMeUPDialog(QtWidgets.QDialog):
 		model = QtWidgets.QGraphicsPixmapItem(QtGui.QPixmap(f"{ROOT_RESOURCE_DIR}image/model_test.png"))
 		model.setZValue(1)
 		self.scene.addItem(model)
+		self.layers = {cat: None for cat in dutil.CATEGORIES.keys()}
+
 
 		# ++++++++++ คำสั่งเอาภาพเข้ามาวาง +++++++++++
 
@@ -118,7 +120,7 @@ class DressMeUPDialog(QtWidgets.QDialog):
 		self.scrollArea.setStyleSheet("""
 			QScrollArea {
 				background-color: transparent;
-				border-radius: 2px;
+				border-radius: 5px;
 		""")
 
 		self.scrollContent = QtWidgets.QWidget()
@@ -126,28 +128,31 @@ class DressMeUPDialog(QtWidgets.QDialog):
 
 		
 
-		for add , items in dutil.CATEGORIES.items():
-			
-			catLabel = QtWidgets.QLabel(f" {add}")
+		for category, items in dutil.CATEGORIES.items():
+			catLabel = QtWidgets.QLabel(f" {category}")
 			catLabel.setStyleSheet("""
 				QLabel {
 					font-weight: bold;
+					font-family: Papyrus;
 					font-size: 16px;
+					border-radius: 5px;
 					color: #86445A;
+					padding: 4px;
 					margin-top: 2px;
 				}
 			""")
 			self.scrollLayout.addWidget(catLabel)
 
-			
-			for item in items:
-				btn = QtWidgets.QPushButton(item)
+			for itemName, imagePath in items.items():
+				btn = QtWidgets.QPushButton(itemName)
 				btn.setStyleSheet("""
 					QPushButton {
 						background-color: #FDE4EB;
-						border-radius: 2px;
+						border-radius:10px;
 						padding: 4px;
 						font-weight: bold;
+						font-size: 14px;
+						font-family: Papyrus;
 						color: #6A4050;
 					}
 					QPushButton:hover {
@@ -157,13 +162,10 @@ class DressMeUPDialog(QtWidgets.QDialog):
 						background-color: #F8BBD0;
 					}
 				""")
-				
-				btn.clicked.connect(lambda checked, name=item: print(f"เลือก: {name}"))
+				# ส่ง category และ path ไปยังฟังก์ชัน
+				btn.clicked.connect(lambda checked=False, c=category, p=imagePath: self.changeOutfit(c, p))
+
 				self.scrollLayout.addWidget(btn)
-
-
-
-
 
 
 		self.scrollLayout.addStretch()
@@ -174,45 +176,22 @@ class DressMeUPDialog(QtWidgets.QDialog):
 
 
 
-		#++++++++++++++++++++++++++++++++++++++
+			# ===== Reset Button =====
 
-		
+
+
+
 
 		self.buttonLayout = QtWidgets.QHBoxLayout()
 		self.mainLayout.addLayout(self.buttonLayout)
-		self.createButton = QtWidgets.QPushButton('Reset')
-		self.createButton.setStyleSheet(
-			'''
-				QPushButton {
-					background-color: #FFF9DD;
-					color: #FFF9DD;
-					border-radius: 10px;
-					font-size: 16px;
-					padding: 4px;
-					font-family: Papyrus;
-					font-weight: bold;
-				}
-
-				QPushButton:hover {
-					background-color: #FFF9DD;
-
-				}
-
-				QPushButton:pressed {
-					background-color: #FFF9DD;
-				}
 
 
-			'''
 
-		)
-
-
-		self.cancelButton = QtWidgets.QPushButton('RESET')
+		self.cancelButton = QtWidgets.QPushButton('')
 		self.cancelButton.setStyleSheet(
 			'''
 				QPushButton {
-					background-color: #FFCBCA;
+					background-color: #FFF9DD;
 					color: white;
 					border-radius: 10px;
 					font-size: 16px;
@@ -222,21 +201,78 @@ class DressMeUPDialog(QtWidgets.QDialog):
 				}
 
 				QPushButton:hover {
-					background-color: #F2A2AD;
+					background-color: #FFF9DD;
 
 				}
 
 				QPushButton:pressed {
-					background-color: #F2668B;
+					background-color: #FFF9DD;
 				}
 			'''
 
 		)
-		self.buttonLayout.addWidget(self.createButton)
+		
 		self.buttonLayout.addWidget(self.cancelButton)
 
 		self.mainLayout.addStretch()
 		self.charLayout.addStretch()
+
+
+		self.resetButton = QtWidgets.QPushButton('RESET')
+
+		self.resetButton.setStyleSheet("""
+			QPushButton {
+				background-color: #FFCBCA;
+				color: white;
+				border-radius: 10px;
+				font-size: 16px;
+				padding: 4px;
+				font-family: Papyrus;
+				font-weight: bold;
+			}
+			QPushButton:hover {
+				background-color: #F2A2AD;
+			}
+			QPushButton:pressed {
+				background-color: #F2668B;
+			}
+		""")
+		self.resetButton.clicked.connect(self.resetOutfit)
+		self.buttonLayout.addWidget(self.resetButton)
+
+
+		self.mainLayout.addStretch()
+		self.charLayout.addStretch()
+
+
+
+
+
+
+
+	def changeOutfit(self, category, imagePath):
+		fullPath = f"{ROOT_RESOURCE_DIR}{imagePath}"
+
+		#  ++++++++++ ลบภาพเดิม  ++++++++++ 
+		if self.layers[category]:
+			self.scene.removeItem(self.layers[category])
+			self.layers[category] = None
+
+		#  ++++++++++ โหลดภาพใหม่  ++++++++++ 
+		newItem = QtWidgets.QGraphicsPixmapItem(QtGui.QPixmap(fullPath))
+
+		z_value = dutil.Z_ORDER.get(category, 1)  
+		newItem.setZValue(z_value)
+
+		self.scene.addItem(newItem)
+		self.layers[category] = newItem	
+
+	def resetOutfit(self):
+		for cat, item in self.layers.items():
+			if item:
+				self.scene.removeItem(item)
+				self.layers[cat] = None
+
 
 def run():
 	global ui
