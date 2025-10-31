@@ -6,6 +6,8 @@ except:
 	from shiboken2 import wrapInstance
 import maya.OpenMayaUI as omui
 
+# import random
+
 from . import dressMeUpUtil as dutil
 
 
@@ -132,16 +134,20 @@ class DressMeUPDialog(QtWidgets.QDialog):
 			catLabel = QtWidgets.QLabel(f" {category}")
 			catLabel.setStyleSheet("""
 				QLabel {
-					font-weight: bold;
-					font-family: Papyrus;
-					font-size: 16px;
-					border-radius: 5px;
-					color: #86445A;
-					padding: 4px;
-					margin-top: 2px;
+
+						background-color: #FDE4EB;
+						border-radius:10px;
+						padding: 10px;
+						font-weight: bold;
+						font-size: 20px;
+						font-family: Papyrus;
+						color: #6A4050;
+
 				}
 			""")
+
 			self.scrollLayout.addWidget(catLabel)
+			
 
 			for itemName, imagePath in items.items():
 				btn = QtWidgets.QPushButton(itemName)
@@ -149,7 +155,7 @@ class DressMeUPDialog(QtWidgets.QDialog):
 					QPushButton {
 						background-color: #FDE4EB;
 						border-radius:10px;
-						padding: 4px;
+						padding: 5px;
 						font-weight: bold;
 						font-size: 14px;
 						font-family: Papyrus;
@@ -265,7 +271,16 @@ class DressMeUPDialog(QtWidgets.QDialog):
 		newItem.setZValue(z_value)
 
 		self.scene.addItem(newItem)
-		self.layers[category] = newItem	
+		self.layers[category] = newItem 
+
+		# test random
+
+	# def randomOutfit(self):
+	# for cat, item in self.layers.items():
+	#   if self.layers[category]:
+	#       self.scene.randomOutfit(self.layers[category])
+	#       self.layers[category] = None
+
 
 	def resetOutfit(self):
 		for cat, item in self.layers.items():
